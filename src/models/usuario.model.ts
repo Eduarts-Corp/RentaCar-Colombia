@@ -25,17 +25,17 @@ export class Usuario extends Entity {
     type: 'string',
     required: true,
   })
-  email: string;
-
-  @property({
-    type: 'date',
-    required: true,
-  })
-  fecha_nacim: string;
+  correo: string; //cambie email a correo y
 
   @property({
     type: 'string',
     required: true,
+  })
+  celular: string; //aqui tambien cambie fecha_nacin por celular a ver que pasa
+
+  @property({
+    type: 'string',
+    required: false,
   })
   contrasena: string;
 

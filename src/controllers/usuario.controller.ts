@@ -1,30 +1,61 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
-import {Usuario} from '../models';
+import {throws} from 'should';
+import {Llaves} from '../config/llaves';
+import {Credenciales, Usuario} from '../models';
 import {UsuarioRepository} from '../repositories';
+import {AutenticacionService} from '../services';
+const fetch = require('node-fetch');
+
+
+
 
 export class UsuarioController {
   constructor(
     @repository(UsuarioRepository)
-    public usuarioRepository : UsuarioRepository,
-  ) {}
+    public usuarioRepository: UsuarioRepository,
+    @service(AutenticacionService)
+    public servicioAutenticacion: AutenticacionService
+  ) { }
+
+  @post("identificarUsuario",{
+    responses:{
+      '200':{
+        description: "Identificacion de Usuarios"
+      }
+    }
+  })
+  async identificarUsuario(
+    @requestBody() credenciales : Credenciales
+  ){
+    let p = await this.servicioAutenticacion.IdentificarUsuario(credenciales.usuario, credenciales.contrasena);
+    if(p){
+      let token = this.servicioAutenticacion.GenerarTokenJWT(p);
+      return{
+        datos: {
+          nombre: p.nombre,
+          correo: p.correo,
+          id: p.id
+        },
+        tk: token 
+      }
+    }else{
+      throw new HttpErrors[401]("Datos Invalidos");
+    }
+
+  }
 
   @post('/usuarios')
   @response(200, {
@@ -44,8 +75,25 @@ export class UsuarioController {
     })
     usuario: Omit<Usuario, 'id'>,
   ): Promise<Usuario> {
-    return this.usuarioRepository.create(usuario);
+
+    let contrasena = this.servicioAutenticacion.GenerarContrasena();
+    let contrasenaCifrada = this.servicioAutenticacion.cifrarContrasena(contrasena);
+    usuario.contrasena = contrasenaCifrada;
+    let p = await this.usuarioRepository.create(usuario);
+
+    //Notificar al usuario
+    let destino = usuario.correo;
+    console.log(`Destino: ${destino}`);
+    let asunto = 'Registro en la plataforma de prueba';
+    let contenido = `Hola ${usuario.nombre}, su nombre de usuario es : ${usuario.correo} y su contraseña es: ${contrasena}`;
+    fetch(`${Llaves.usrServicioNotificaciones}/envio-correo?correo_destino=${destino}&asunto= ${asunto}&contenido=${contenido}`)
+      .then((data: any) => {
+        console.log(data);
+      })
+    return p;
+
   }
+
 
   @get('/usuarios/count')
   @response(200, {

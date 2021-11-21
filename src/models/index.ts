@@ -9,3 +9,4 @@ export * from './vehiculo.model';
 export * from './contrato.model';
 export * from './tarjeta-credito.model';
 export * from './ciudad.model';
+export * from './credenciales.model';
