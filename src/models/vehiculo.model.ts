@@ -13,9 +13,9 @@ export class Vehiculo extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+    required: true, 
   })
-  descripcion: string;
+  nombre: string;
 
   @property({
     type: 'string',

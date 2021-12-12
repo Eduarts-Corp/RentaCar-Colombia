@@ -21,40 +21,29 @@ export class EstrategiaAdministrador implements AuthenticationStrategy{
     if (token){
       let datos= this.servicioAutenticacion.ValidarTokenJWT(token);
       if(datos){
-        if(datos.data.rol === "administrador"){
-          let perfil: UserProfile = Object.assign({
-            nombre: datos.data.nombre
-        });
-        return perfil;
-      }else{
-        throw new HttpErrors[401]("El rol usado no es un rol valido")
-      }
-    } else{
-     throw new HttpErrors[401]("El token incluido no es valido")
-     }
-       }else{
-       throw new HttpErrors[401]("No se ha incluido un token en la solicitud ")
-
+        let perfil: UserProfile = Object.assign({
+          nombre: datos.data.nombre
+         });
+         return perfil;
+       } else{
+        throw new HttpErrors[401]("El token incluido no es valido")
        }
+      }else{
+      throw new HttpErrors[401]("No se ha incluido un token en la solicitud ")
 
       }
 
-}
+    }
+
+  }
+
+
+
+
+
 
 
   //este metodo Se uso en el ejercicio cuando no se tenia un rol establecido.
-
-       // let perfil: UserProfile = Object.assign({
-       //   nombre: datos.data.nombre
-       //  });
-       //  return perfil;
-      // } else{
-      //  throw new HttpErrors[401]("El token incluido no es valido")
-      // }
-     // }else{
-     // throw new HttpErrors[401]("No se ha incluido un token en la solicitud ")
-
-
 
 
 

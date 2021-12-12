@@ -45,7 +45,7 @@ export class UsuarioController {
           nombre: p.nombre,
           correo: p.correo,
           id: p.id,
-          rol: p.rol
+
         },
         tk: token
       }
@@ -86,9 +86,9 @@ export class UsuarioController {
     let asunto = 'Registro en la plataforma de prueba';
     let contenido = `Hola ${usuario.nombre}, su nombre de usuario es : ${usuario.correo} y su contraseña es: ${contrasena}`;
     fetch(`${Llaves.usrServicioNotificaciones}/envio-correo?correo_destino=${destino}&asunto= ${asunto}&contenido=${contenido}`)
-      .then((data: any) => {
-        console.log(data);
-      })
+    .then((data: any) => {
+    console.log(data);
+     })
     return p;
 
   }

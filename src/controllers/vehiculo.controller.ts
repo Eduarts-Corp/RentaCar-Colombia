@@ -16,6 +16,7 @@ import {Vehiculo} from '../models';
 import {VehiculoRepository} from '../repositories';
 
 
+
 export class VehiculoController {
   constructor(
     @repository(VehiculoRepository)
@@ -44,6 +45,7 @@ export class VehiculoController {
     return this.vehiculoRepository.create(vehiculo);
   }
 
+
   @get('/vehiculos/count')
   @response(200, {
     description: 'Vehiculo model count',
@@ -54,6 +56,7 @@ export class VehiculoController {
   ): Promise<Count> {
     return this.vehiculoRepository.count(where);
   }
+
 
   @get('/vehiculos')
   @response(200, {
@@ -91,6 +94,7 @@ export class VehiculoController {
   ): Promise<Count> {
     return this.vehiculoRepository.updateAll(vehiculo, where);
   }
+
 
   @get('/vehiculos/{id}')
   @response(200, {
@@ -136,6 +140,7 @@ export class VehiculoController {
   ): Promise<void> {
     await this.vehiculoRepository.replaceById(id, vehiculo);
   }
+
 
   @del('/vehiculos/{id}')
   @response(204, {

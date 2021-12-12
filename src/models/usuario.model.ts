@@ -39,13 +39,7 @@ export class Usuario extends Entity {
   })
   contrasena: string;
 
-  @property({         //como se decia en los videos se crea el rol para los diferentes actores.
-    type: 'string',
-    required: true,
-  })
-  rol: string;
-
-
+  
   constructor(data?: Partial<Usuario>) {
     super(data);
   }
